@@ -70,5 +70,57 @@ def _(orders):
     return
 
 
+@app.cell
+def _(pd):
+    costs = pd.read_csv("data/channel_costs.csv")
+    costs["month"] = pd.to_datetime(costs["month"]).dt.to_period("M")
+    return (costs,)
+
+
+@app.cell
+def _(costs, orders, pd):
+    channel_month_metrics = (orders.groupby(["month", "channel"], as_index=False)
+                                .agg(
+                                orders_count=("order_id", "count"),
+                                revenue=("revenue", "sum"),
+                                refund_count=("refund_flag", "sum")                                
+                                )
+                            )
+    channel_month = pd.merge(channel_month_metrics, costs, on=["month", "channel"], how="left")
+    channel_month["revenue_to_cost"] = channel_month["revenue"] / channel_month["marketing_cost"]
+    channel_month = channel_month.round(
+                    {"revenue": 2, "average_order_value": 2, "revenue_to_cost": 2}
+    )
+    channel_month["marketing_cost"].isna().sum()
+    channel_month
+    return (channel_month,)
+
+
+@app.cell
+def _(channel_month):
+    channel = (channel_month.groupby(["channel"], as_index=False)
+               .agg(
+                orders_count=("orders_count", "sum"),
+                revenue=("revenue", "sum"),
+                refund_count=("refund_count", "sum"),
+                marketing_cost=("marketing_cost", "sum"),
+                avg_revenue_to_cost = ("revenue_to_cost", "mean")
+                    )
+               )
+    channel["channel_total"] = channel["revenue"] / channel["marketing_cost"]
+    channel = channel.round(
+                    {"revenue": 2, "channel_total": 2, "avg_revenue_to_cost": 2}
+    )
+
+    channel
+    return
+
+
+@app.cell
+def _(avg):
+    avg
+    return
+
+
 if __name__ == "__main__":
     app.run()
