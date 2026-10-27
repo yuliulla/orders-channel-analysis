@@ -23,25 +23,6 @@ The dataset is small and educational. Observed differences between channels are 
 
 The denominator of each rate and average must be checked after filtering and grouping.
 
-## Initial data checks
-
-- 48 rows and 48 unique `order_id` values: one row per order in this extract.
-- 46 unique `customer_id` values: some customers appear in more than one order.
-- No missing values in the loaded table (`orders.isna().sum()`).
-
-These checks do not yet establish that prices, quantities, discounts, or dates are valid.
-
-## Analysis plan
-
-1. Check row count, unique order IDs, missing values, date range and valid numeric fields.
-2. Calculate order-level revenue and verify a few rows manually.
-3. Summarize orders, refunds, refund rate and recognized revenue by channel.
-4. Compare months and add marketing costs at the matching `(month, channel)` level.
-5. Write a short conclusion with limitations and follow-up questions.
-
-## Status
-
-Completed. The analysis is reproducible in analysis.py (marimo notebook). 
 ## Findings
 
 Revenue-to-cost ratio for the quarter (total recognized revenue / total marketing cost):
@@ -67,3 +48,23 @@ Revenue-to-cost ratio for the quarter (total recognized revenue / total marketin
 ## Next step
 
 - Reduce the Ads budget for a limited period and track orders and revenue across all channels, not only Ads. This would show whether part of the orders attributed to other channels depends on Ads.
+
+## Initial data checks
+
+- 48 rows and 48 unique `order_id` values: one row per order in this extract.
+- 46 unique `customer_id` values: some customers appear in more than one order.
+- No missing values in the loaded table (`orders.isna().sum()`).
+
+These checks do not yet establish that prices, quantities, discounts, or dates are valid.
+
+## Analysis plan
+
+1. Check row count, unique order IDs, missing values, date range and valid numeric fields.
+2. Calculate order-level revenue and verify a few rows manually.
+3. Summarize orders, refunds, refund rate and recognized revenue by channel.
+4. Compare months and add marketing costs at the matching `(month, channel)` level.
+5. Write a short conclusion with limitations and follow-up questions.
+
+## Status
+
+Completed. The analysis is reproducible in analysis.py (marimo notebook). 
